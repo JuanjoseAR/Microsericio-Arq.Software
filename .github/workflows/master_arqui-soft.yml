@@ -22,7 +22,7 @@ jobs:
           distribution: 'microsoft'
 
       - name: Build with Ant
-        run: ant  # o reemplaza con el target específico, por ejemplo: ant war
+        run: ant  -Dlibs.CopyLibs.classpath=build/web/WEB-INF/lib/org-netbeans-modules-java-j2seproject-copylibstask.jar
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
