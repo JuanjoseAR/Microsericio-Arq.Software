@@ -983,30 +983,26 @@ exists or setup the property manually. For example like this:
     <target depends="init,compile,compile-jsps,-pre-dist,-do-dist-with-manifest,-do-dist-without-manifest" name="do-dist"/>
     <target depends="init" if="dist.ear.dir" name="library-inclusion-in-manifest">
         <copy todir="${dist.ear.dir}/lib">
-            <fileset>
-                <filelist files="
-                ${file.reference.gson-2.10.1.jar},
-                ${file.reference.mongodb-driver-sync-4.11.1.jar},
-                ${file.reference.bson-4.11.1.jar},
-                ${file.reference.mongodb-driver-core-4.11.1.jar},
-                ${file.reference.javax.servlet-api-4.0.1.jar}
-            "/>
-            </fileset>
+            <filelist>
+                <file name="${file.reference.gson-2.10.1.jar}"/>
+                <file name="${file.reference.mongodb-driver-sync-4.11.1.jar}"/>
+                <file name="${file.reference.bson-4.11.1.jar}"/>
+                <file name="${file.reference.mongodb-driver-core-4.11.1.jar}"/>
+                <file name="${file.reference.javax.servlet-api-4.0.1.jar}"/>
+            </filelist>
         </copy>
         <mkdir dir="${build.web.dir}/META-INF"/>
         <manifest file="${build.web.dir}/META-INF/MANIFEST.MF" mode="update"/>
     </target>
     <target depends="init" name="library-inclusion-in-archive" unless="dist.ear.dir">
         <copy todir="${build.web.dir}/WEB-INF/lib">
-            <fileset>
-                <filelist files="
-                ${file.reference.gson-2.10.1.jar},
-                ${file.reference.mongodb-driver-sync-4.11.1.jar},
-                ${file.reference.bson-4.11.1.jar},
-                ${file.reference.mongodb-driver-core-4.11.1.jar},
-                ${file.reference.javax.servlet-api-4.0.1.jar}
-            "/>
-            </fileset>
+            <filelist>
+                <file name="${file.reference.gson-2.10.1.jar}"/>
+                <file name="${file.reference.mongodb-driver-sync-4.11.1.jar}"/>
+                <file name="${file.reference.bson-4.11.1.jar}"/>
+                <file name="${file.reference.mongodb-driver-core-4.11.1.jar}"/>
+                <file name="${file.reference.javax.servlet-api-4.0.1.jar}"/>
+            </filelist>
         </copy>
     </target>
     <target depends="init" if="dist.ear.dir" name="-clean-webinf-lib">
