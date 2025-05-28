@@ -17,7 +17,7 @@ public class ReviewValidator {
 
     public static String getValidationError(ReviewDTO dto) {
         if (dto == null) return "Review data is missing.";
-        if (dto.getRoomId() == null ) return "roomId is required.";
+        if (dto.getRoomId() == null ) return "roomId is required."+dto.getRoomId();
         if (dto.getClientId() == null || dto.getClientId().trim().isEmpty()) return "clientId is required.";
         if (dto.getRating() < 1 || dto.getRating() > 5) return "rating must be between 1 and 5.";
         if (dto.getComment() == null || dto.getComment().trim().isEmpty()) return "comment is required.";
