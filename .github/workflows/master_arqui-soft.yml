@@ -21,8 +21,11 @@ jobs:
           java-version: '17'
           distribution: 'microsoft'
 
+      - name: List files in web directory
+        run: ls -R web
+
       - name: Build with Ant
-        run: ant  -Dlibs.CopyLibs.classpath=build/web/WEB-INF/lib/org-netbeans-modules-java-j2seproject-copylibstask.jar
+        run: ant -Dlibs.CopyLibs.classpath=build/web/WEB-INF/lib/org-netbeans-modules-java-j2seproject-copylibstask.jar
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
