@@ -12,8 +12,8 @@ import com.mongodb.client.MongoDatabase;
  */
 public class MongoBDConnection {
 
-    private static final String CONNECTION_STRING = "mongodb://localhost:27017/"; 
-    private static final String DATABASE_NAME = "servicio_habitaciones";
+    private static final String CONNECTION_STRING = "mongodb+srv://jarango:GClfNp3VLZfYPQf0@cluster0.avd8vhv.mongodb.net/";
+    private static final String DATABASE_NAME = "local";
     private static MongoClient mongoClient = null;
 
     // Método para obtener la conexión
