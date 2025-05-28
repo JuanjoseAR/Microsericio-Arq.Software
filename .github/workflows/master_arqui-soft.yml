@@ -42,13 +42,6 @@ jobs:
             echo '</web-app>' >> web/WEB-INF/web.xml
           fi
 
-      # Descargar NetBeans CopyLibs task
-      - name: Download NetBeans CopyLibs task
-        run: |
-          mkdir -p nbproject/lib
-          # Descargar el jar del CopyLibs task desde Maven Central
-          wget -O nbproject/lib/org-netbeans-modules-java-j2seproject-copylibstask.jar \
-            https://repo1.maven.org/maven2/org/netbeans/external/org-netbeans-modules-java-j2seproject-copylibstask/12.6.1/org-netbeans-modules-java-j2seproject-copylibstask-12.6.1.jar
 
       # Verificar estructura antes del build
       - name: Debug - List project structure
