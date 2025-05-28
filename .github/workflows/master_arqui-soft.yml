@@ -23,6 +23,12 @@ jobs:
 
       - name: List files in web directory
         run: ls -R web
+      - name: List files in repo root
+        run: ls -R
+      - name: Verify WEB-INF path
+        run: test -d web/WEB-INF && echo "WEB-INF exists in web/" || echo "WEB-INF NOT found in web/"
+      - name: Verify WEB-INF path in build folder
+        run: test -d build/web/WEB-INF && echo "WEB-INF exists in build/web/" || echo "WEB-INF NOT found in build/web/"
 
       - name: Build with Ant
         run: ant -Dlibs.CopyLibs.classpath=build/web/WEB-INF/lib/org-netbeans-modules-java-j2seproject-copylibstask.jar
