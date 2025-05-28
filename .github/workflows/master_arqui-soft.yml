@@ -42,11 +42,13 @@ jobs:
             echo '</web-app>' >> web/WEB-INF/web.xml
           fi
 
-      # Copiar dependencias necesarias para Ant
-      - name: Setup Ant dependencies
+      # Descargar NetBeans CopyLibs task
+      - name: Download NetBeans CopyLibs task
         run: |
-          # Buscar y copiar el CopyLibs task si existe
-          find . -name "*copylibstask*" -type f -exec cp {} build/web/WEB-INF/lib/ \; 2>/dev/null || echo "CopyLibs task not found, continuing..."
+          mkdir -p nbproject/lib
+          # Descargar el jar del CopyLibs task desde Maven Central
+          wget -O nbproject/lib/org-netbeans-modules-java-j2seproject-copylibstask.jar \
+            https://repo1.maven.org/maven2/org/netbeans/external/org-netbeans-modules-java-j2seproject-copylibstask/12.6.1/org-netbeans-modules-java-j2seproject-copylibstask-12.6.1.jar
 
       # Verificar estructura antes del build
       - name: Debug - List project structure
@@ -58,49 +60,61 @@ jobs:
           echo "=== Lib directory ==="
           ls -la lib/ || echo "No lib directory"
 
-      # Build principal sin javadoc para evitar errores
-      - name: Build with Ant (skip javadoc)
+      # Build con NetBeans Ant
+      - name: Build with Ant (NetBeans project)
         run: |
-          # Intentar diferentes targets en orden de preferencia
-          if ant -q -projecthelp | grep -q "compile"; then
-            echo "Running ant compile"
-            ant compile
-          elif ant -q -projecthelp | grep -q "build"; then
-            echo "Running ant build"  
-            ant build
-          else
-            echo "Running default ant target"
-            ant
-          fi
+          # Usar el path correcto para CopyLibs
+          COPYLIBS_PATH="nbproject/lib/org-netbeans-modules-java-j2seproject-copylibstask.jar"
+          
+          echo "Building NetBeans project with CopyLibs..."
+          echo "CopyLibs path: $COPYLIBS_PATH"
+          
+          # Construir con el path de CopyLibs
+          ant -Dlibs.CopyLibs.classpath="$COPYLIBS_PATH" clean compile dist
 
-      # Crear WAR si no se generó automáticamente
+      # Crear WAR si NetBeans no lo generó
       - name: Create WAR if needed
         run: |
           if [ ! -f dist/*.war ]; then
-            echo "WAR file not found, creating manually..."
+            echo "WAR file not found in dist/, creating manually..."
             mkdir -p temp-war/WEB-INF/classes
             mkdir -p temp-war/WEB-INF/lib
+            mkdir -p dist
           
-            # Copiar clases compiladas
+            # Copiar clases compiladas (NetBeans las pone en build/classes)
             if [ -d "build/classes" ]; then
-              cp -r build/classes/* temp-war/WEB-INF/classes/ 2>/dev/null || echo "No compiled classes found"
+              cp -r build/classes/* temp-war/WEB-INF/classes/ 2>/dev/null || echo "No compiled classes in build/classes"
             fi
           
             # Copiar archivos web
             if [ -d "web" ]; then
-              cp -r web/* temp-war/ 2>/dev/null || echo "No web files found"
+              cp -r web/* temp-war/ 2>/dev/null
+            elif [ -d "src/main/webapp" ]; then
+              cp -r src/main/webapp/* temp-war/ 2>/dev/null
             fi
           
             # Copiar dependencias
             if [ -d "lib" ]; then
-              cp lib/*.jar temp-war/WEB-INF/lib/ 2>/dev/null || echo "No lib files found"
+              cp lib/*.jar temp-war/WEB-INF/lib/ 2>/dev/null || echo "No jar files in lib"
+            fi
+          
+            # Crear web.xml básico si no existe
+            if [ ! -f "temp-war/WEB-INF/web.xml" ]; then
+              echo '<?xml version="1.0" encoding="UTF-8"?>' > temp-war/WEB-INF/web.xml
+              echo '<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee" version="5.0">' >> temp-war/WEB-INF/web.xml
+              echo '  <display-name>Microservicio App</display-name>' >> temp-war/WEB-INF/web.xml
+              echo '</web-app>' >> temp-war/WEB-INF/web.xml
             fi
           
             # Crear WAR
             cd temp-war
-            jar -cvf ../dist/app.war *
+            jar -cvf ../dist/microservicio.war *
             cd ..
-            echo "Created WAR file: dist/app.war"
+            echo "Created WAR file manually: dist/microservicio.war"
+            ls -la dist/
+          else
+            echo "WAR file found in dist/"
+            ls -la dist/*.war
           fi
 
       # Verificar que se generó el WAR
@@ -108,10 +122,14 @@ jobs:
         run: |
           echo "=== Looking for WAR files ==="
           find . -name "*.war" -type f
-          echo "=== WAR file details ==="
-          ls -la dist/*.war || echo "No WAR files in dist directory"
           echo "=== Dist directory contents ==="
-          ls -la dist/ || echo "No dist directory"
+          ls -la dist/ || echo "No dist directory found"
+          
+          # Si no hay WAR en dist, buscarlo en otras ubicaciones comunes de NetBeans
+          if [ ! -f dist/*.war ]; then
+            echo "=== Searching for WAR in other NetBeans locations ==="
+            find . -name "*.war" -type f 2>/dev/null || echo "No WAR files found anywhere"
+          fi
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
