@@ -982,22 +982,22 @@ exists or setup the property manually. For example like this:
     </target>
     <target depends="init,compile,compile-jsps,-pre-dist,-do-dist-with-manifest,-do-dist-without-manifest" name="do-dist"/>
     <target depends="init" if="dist.ear.dir" name="library-inclusion-in-manifest">
-        <copy files="${file.reference.gson-2.10.1.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
-        <copy files="${file.reference.mongodb-driver-sync-4.11.1.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
-        <copy files="${file.reference.bson-4.11.1.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
-        <copy files="${file.reference.mongodb-driver-core-4.11.1.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
-        <copy files="${file.reference.javax.servlet-api-4.0.1.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
-        <copy files="${file.reference.jakarta.servlet-api-6.1.0-M2.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copy file="${file.reference.gson-2.10.1.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copy file="${file.reference.mongodb-driver-sync-4.11.1.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copy file="${file.reference.bson-4.11.1.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copy file="${file.reference.mongodb-driver-core-4.11.1.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copy file="${file.reference.javax.servlet-api-4.0.1.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
+        <copy file="${file.reference.jakarta.servlet-api-6.1.0-M2.jar}" iftldtodir="${build.web.dir}/WEB-INF" todir="${dist.ear.dir}/lib"/>
         <mkdir dir="${build.web.dir}/META-INF"/>
         <manifest file="${build.web.dir}/META-INF/MANIFEST.MF" mode="update"/>
     </target>
     <target depends="init" name="library-inclusion-in-archive" unless="dist.ear.dir">
-        <copy files="${file.reference.gson-2.10.1.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copy files="${file.reference.mongodb-driver-sync-4.11.1.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copy files="${file.reference.bson-4.11.1.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copy files="${file.reference.mongodb-driver-core-4.11.1.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copy files="${file.reference.javax.servlet-api-4.0.1.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
-        <copy files="${file.reference.jakarta.servlet-api-6.1.0-M2.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${file.reference.gson-2.10.1.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${file.reference.mongodb-driver-sync-4.11.1.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${file.reference.bson-4.11.1.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${file.reference.mongodb-driver-core-4.11.1.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${file.reference.javax.servlet-api-4.0.1.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
+        <copy file="${file.reference.jakarta.servlet-api-6.1.0-M2.jar}" todir="${build.web.dir}/WEB-INF/lib"/>
     </target>
     <target depends="init" if="dist.ear.dir" name="-clean-webinf-lib">
         <delete dir="${build.web.dir}/WEB-INF/lib"/>
