@@ -43,13 +43,6 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
     BufferedReader reader = request.getReader();
     ReviewDTO dto = gson.fromJson(reader, ReviewDTO.class);
 
-    String error = ReviewValidator.getValidationError(dto);
-    if (error != null) {
-        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        response.setContentType("application/json");
-        response.getWriter().write("{\"error\": \"" + error + "\"}");
-        return;
-    }
 
     if (dto.getDate() == null) {
         dto.setDate(new Date());
